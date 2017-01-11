@@ -8,19 +8,25 @@ namespace com.eidu.counting.formation
 
     public class FormationRenderer : MonoBehaviour
     {
-
+        // Prefab which is used to visualize the calculated object positions
         public GameObject itemToShow;
 
+        // Reference to the container where the created items shall be visualized.
         public GameObject container;
 
+        // Input field to specify the width and height of the container as well as 
+        // the number of items which shall be created 
         public InputField widthInput;
         public InputField heightInput;
         public InputField itemCountInput;
 
-        public float distanceToNextItem = 0.05f;
 
+        // Storing the created game objects to be able to destroy them before creating
+        // new items.
         private List<GameObject> itemList;
 
+
+        // Initial program values
         private int containerWidth = 900;
         private int containerHeight = 600;
         private int itemCount = 5;
@@ -71,6 +77,11 @@ namespace com.eidu.counting.formation
             }
         }
 
+        /// <summary>
+        /// Rendering the objects inside of the container.
+        /// </summary>
+        /// <param name="objectsInformation">The information of the objects
+        /// which shall be visualized</param>
         public void RenderObjects(List<ObjectInfo> objectsInformation)
         {
             RectTransform rectTransform = container.GetComponent<RectTransform>();
@@ -138,7 +149,7 @@ namespace com.eidu.counting.formation
                 itemCount = parsedValue;
             }
         }
-
+        
 
         private void DeleteItems()
         {

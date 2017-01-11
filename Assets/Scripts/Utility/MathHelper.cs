@@ -30,6 +30,13 @@ namespace com.eidu.util
             return a;
         }
 
+
+        /// <summary>
+        /// Calculating the apect ration of a and b.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns>the aspect ratio.</returns>
         public static Vector2 GetAspectRatio(int a, int b)
         {
             int gcd = GCD(a, b);
