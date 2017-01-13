@@ -7,7 +7,7 @@ using com.eidu.util;
 
 namespace com.eidu.counting.formation.tests
 {
-    public class RandomGridFormatioTest {
+    public class RandomGridFormationTest {
 
         [Test]
         public void ZeroItemsTest()
@@ -80,6 +80,34 @@ namespace com.eidu.counting.formation.tests
             List<ObjectInfo> objectsInfoList = FormationUtility.GetRandomFormationObjectsInformation(containerWidth, containerHeight, itemCount);
 
             TestHelper.OverLappingTest(objectsInfoList);
+        }
+
+        [Test]
+        public void OneItemContainingTest()
+        {
+            int containerWidth = 100;
+            int containerHeight = 100;
+            int itemCount = 1;
+
+            Rect containerBounds = new Rect(0, 0, containerWidth, containerHeight);
+
+            List<ObjectInfo> objectsInfoList = FormationUtility.GetRandomFormationObjectsInformation(containerWidth, containerHeight, itemCount);
+
+            TestHelper.CheckIfAllObjectsInsideContainer(containerBounds, objectsInfoList);
+        }
+
+        [Test]
+        public void TenItemsContainingTest()
+        {
+            int containerWidth = 100;
+            int containerHeight = 100;
+            int itemCount = 10;
+
+            Rect containerBounds = new Rect(0, 0, containerWidth, containerHeight);
+
+            List<ObjectInfo> objectsInfoList = FormationUtility.GetRandomFormationObjectsInformation(containerWidth, containerHeight, itemCount);
+
+            TestHelper.CheckIfAllObjectsInsideContainer(containerBounds, objectsInfoList);
         }
     }
 }
