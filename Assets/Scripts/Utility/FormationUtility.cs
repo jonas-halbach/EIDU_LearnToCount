@@ -24,7 +24,7 @@ namespace com.eidu.util
         {
             List<ObjectInfo> objectsInformationList = new List<ObjectInfo>();
 
-            int horizontalCenter = containerHeight / 2;
+            float horizontalCenter = containerHeight / 2f;
 
             float itemDistance = containerWidth / (float)numberOfItems;
 
@@ -32,9 +32,9 @@ namespace com.eidu.util
 
             for (int i = 0; i < numberOfItems; i++)
             {
-                float x = itemDistance / 2 + i * itemDistance;
+                float x = i * size;
                 ObjectInfo currentObjectInfo = new ObjectInfo();
-                currentObjectInfo.Position = new Vector2(x, -horizontalCenter);
+                currentObjectInfo.Position = new Vector2(x, -horizontalCenter + size / 2);
                 currentObjectInfo.Height = Mathf.Min(size, Constants.MAX_ITEM_SIZE);
                 currentObjectInfo.Width = Mathf.Min(size, Constants.MAX_ITEM_SIZE);
                 objectsInformationList.Add(currentObjectInfo);
@@ -61,31 +61,33 @@ namespace com.eidu.util
 
             float radius = Mathf.Min(maxRadius - maxRadius / 2, Mathf.Abs(maxRadius - Constants.MAX_ITEM_SIZE));
 
-            float anglDistance = 360 / (float)numberOfItems;
+            float angleDistance = 360 / (float)numberOfItems;
 
             if (numberOfItems == 1)
             {
                 ObjectInfo currentObjectInfo = new ObjectInfo();
-                currentObjectInfo.Position = new Vector2(containerWidth / 2, -containerHeight / 2);
-                currentObjectInfo.Width = radius;
-                currentObjectInfo.Height = radius;
+                currentObjectInfo.Position = new Vector2(containerWidth / 2 - maxRadius / 2,  -containerHeight / 2 + maxRadius / 2);
+                currentObjectInfo.Width = maxRadius;
+                currentObjectInfo.Height = maxRadius;
                 objectsInformationList.Add(currentObjectInfo);
             }
             else
             {
-                float itemSize = GetMaxItemDistanceCircle(anglDistance, radius);
+                float itemSize = GetMaxItemDistanceCircle(angleDistance, radius);
+                itemSize = Mathf.Min(itemSize, Constants.MAX_ITEM_SIZE);
+
 
                 for (int i = 0; i < numberOfItems; i++)
                 {
-                    float currentAngle = i * anglDistance;
+                    float currentAngle = i * angleDistance;
                     ObjectInfo currentObjectInfo = new ObjectInfo();
                     Vector2 circlePos = GetObjectPositionByRadiusAngle(radius, currentAngle);
-                    circlePos.x += containerWidth / 2;
-                    circlePos.y -= containerHeight / 2;
+                    circlePos.x += containerWidth / 2 -itemSize / 2;
+                    circlePos.y -= containerHeight / 2 - itemSize / 2;
                     currentObjectInfo.Position = circlePos;
 
-                    currentObjectInfo.Width = Mathf.Min(itemSize, Constants.MAX_ITEM_SIZE);
-                    currentObjectInfo.Height = Mathf.Min(itemSize, Constants.MAX_ITEM_SIZE);
+                    currentObjectInfo.Width = itemSize;
+                    currentObjectInfo.Height = itemSize;
 
                     objectsInformationList.Add(currentObjectInfo);
                 }
@@ -121,7 +123,7 @@ namespace com.eidu.util
                 int col = itemsAdded % resultingDimensionX;
 
                 ObjectInfo currentObjectInfo = new ObjectInfo();
-                currentObjectInfo.Position = new Vector2(col * resultingWidth + resultingWidth / 2, -row * resultingWidth - resultingWidth / 2);
+                currentObjectInfo.Position = new Vector2(col * resultingWidth, -row * resultingWidth);
                 currentObjectInfo.Width = Mathf.Min(resultingWidth, Constants.MAX_ITEM_SIZE);
                 currentObjectInfo.Height = Mathf.Min(resultingWidth, Constants.MAX_ITEM_SIZE);
 
@@ -144,6 +146,8 @@ namespace com.eidu.util
         {
             List<ObjectInfo> objectsInformationList = new List<ObjectInfo>();
 
+            Rect containerRect = new Rect(0, 0, containerWidth, containerHeight);
+
             float freeFieldPercentage = 0.9f;
 
             //calculating the number of free field needed if freeFieldPercentage of the fields shall be free
@@ -159,20 +163,29 @@ namespace com.eidu.util
 
             while (coordinates.Count < numberOfItems)
             {
-                int x = (int)(Random.value * resultingDimensionX);
-                int y = (int)(Random.value * resultingDimensionY);
+                float randomX = Random.value;
+                float randomY = Random.value;
 
-                Pair currentCoordinate = new Pair(x, y);
-                if(!coordinates.Contains(currentCoordinate))
+                int x = (int)(Mathf.Clamp(randomX, 0.0001f, 0.9999f) * resultingDimensionX);
+                int y = (int)(Mathf.Clamp(randomY, 0.0001f, 0.9999f) * resultingDimensionY);
+                //int x = (int)(randomX * resultingDimensionX);
+                //int y = (int)(randomY * resultingDimensionY);
+                Pair currentCoordinate = new Pair((int)x, (int)y);
+                if (!coordinates.Contains(currentCoordinate))
                 {
-                    coordinates.Add(currentCoordinate);
+                    
 
                     ObjectInfo currentObjectInfo = new ObjectInfo();
-                    currentObjectInfo.Position = new Vector3(x * itemSize + itemSize / 2, -y * itemSize - itemSize / 2);
-                    currentObjectInfo.Width = itemSize;
-                    currentObjectInfo.Height = itemSize;
+                    currentObjectInfo.Position = new Vector3(x * itemSize, -y * itemSize);
 
-                    objectsInformationList.Add(currentObjectInfo);
+                    if (containerRect.Contains(new Vector2(currentObjectInfo.Position.x + itemSize, -currentObjectInfo.Position.y - itemSize)))
+                    {
+                        coordinates.Add(currentCoordinate);
+                        currentObjectInfo.Width = itemSize;
+                        currentObjectInfo.Height = itemSize;
+
+                        objectsInformationList.Add(currentObjectInfo);
+                    }
                 }
             }
 
@@ -226,7 +239,11 @@ namespace com.eidu.util
 
             float p = radius - adjacentLeg;
 
-            return Mathf.Min(oppositeLeg, p);
+            float preferredSize = Mathf.Min(oppositeLeg, p);
+
+            preferredSize = Mathf.Abs(preferredSize) < 0.0001f ? Mathf.Max(oppositeLeg, p) : preferredSize;
+
+            return preferredSize;
         }
 
 
@@ -256,7 +273,7 @@ namespace com.eidu.util
         {
             Vector3 scaleSize = Vector3.one;
 
-            SpriteRenderer spriteRenderer = objectToScale.GetComponent<SpriteRenderer>();
+            SpriteRenderer spriteRenderer = objectToScale.GetComponentInChildren<SpriteRenderer>();
 
             if (spriteRenderer != null)
             {
