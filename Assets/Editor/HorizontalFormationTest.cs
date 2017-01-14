@@ -1,6 +1,7 @@
 ﻿using com.eidu.util;
 using NUnit.Framework;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace com.eidu.counting.formation.tests
 {
@@ -20,7 +21,7 @@ namespace com.eidu.counting.formation.tests
 
             foreach (ObjectInfo objectInfo in objectsInfoList)
             {
-                Assert.AreEqual(objectInfo.Position.y, -50);
+                Assert.AreEqual(-35, objectInfo.Position.y);
             }
         }
 
@@ -36,6 +37,46 @@ namespace com.eidu.counting.formation.tests
             TestHelper.OverLappingTest(objectsInfoList);
         }
 
+        [Test]
+        public void OneItemContainingTest()
+        {
+            int containerWidth = 100;
+            int containerHeight = 100;
+            int itemCount = 1;
 
+            Rect containerBounds = new Rect(0, 0, containerWidth, containerHeight);
+
+            List<ObjectInfo> objectsInfoList = FormationUtility.GetHorizontalLineFormationObjectsInformation(containerWidth, containerHeight, itemCount);
+
+            TestHelper.CheckIfAllObjectsInsideContainer(containerBounds, objectsInfoList);
+        }
+
+        [Test]
+        public void TenItemContainingTest()
+        {
+            int containerWidth = 100;
+            int containerHeight = 100;
+            int itemCount = 1;
+
+            Rect containerBounds = new Rect(0, 0, containerWidth, containerHeight);
+
+            List<ObjectInfo> objectsInfoList = FormationUtility.GetHorizontalLineFormationObjectsInformation(containerWidth, containerHeight, itemCount);
+
+            TestHelper.CheckIfAllObjectsInsideContainer(containerBounds, objectsInfoList);
+        }
+
+        [Test]
+        public void HundredItemContainingTest()
+        {
+            int containerWidth = 100;
+            int containerHeight = 100;
+            int itemCount = 1;
+
+            Rect containerBounds = new Rect(0, 0, containerWidth, containerHeight);
+
+            List<ObjectInfo> objectsInfoList = FormationUtility.GetHorizontalLineFormationObjectsInformation(containerWidth, containerHeight, itemCount);
+
+            TestHelper.CheckIfAllObjectsInsideContainer(containerBounds, objectsInfoList);
+        }
     }
 }

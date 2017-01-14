@@ -20,10 +20,10 @@ namespace com.eidu.counting.formation.tests
 
             Assert.AreEqual(objectsInfoList.Count, itemCount);
 
-            Assert.AreEqual(objectsInfoList[0].Position.x, 50);
-            Assert.AreEqual(objectsInfoList[0].Position.y, -50);
+            Assert.AreEqual(25.0f, objectsInfoList[0].Position.x);
+            Assert.AreEqual(-25.0f, objectsInfoList[0].Position.y);
 
-            Assert.AreEqual(objectsInfoList[0].Width, 25);
+            Assert.AreEqual(50.0f, objectsInfoList[0].Width);
         }
 
 
@@ -39,8 +39,8 @@ namespace com.eidu.counting.formation.tests
             Assert.AreEqual(objectsInfoList.Count, itemCount);
 
             Vector2[] expectedPositions = new Vector2[2];
-            expectedPositions[0] = new Vector2(50, -25);
-            expectedPositions[1] = new Vector2(50, -75);
+            expectedPositions[0] = new Vector2(25, 0);
+            expectedPositions[1] = new Vector2(25, -50);
 
             for(int i = 0; i < objectsInfoList.Count; i++)
             {
@@ -62,10 +62,10 @@ namespace com.eidu.counting.formation.tests
             Assert.AreEqual(objectsInfoList.Count, itemCount);
 
             Vector2[] expectedPositions = new Vector2[4];
-            expectedPositions[0] = new Vector2(50, -25);
-            expectedPositions[1] = new Vector2(75, -50);
-            expectedPositions[2] = new Vector2(50, -75);
-            expectedPositions[3] = new Vector2(25, -50);
+            expectedPositions[0] = new Vector2(37.5f, -12.5f);
+            expectedPositions[1] = new Vector2(62.5f, -37.5f);
+            expectedPositions[2] = new Vector2(37.5f, -62.5f);
+            expectedPositions[3] = new Vector2(12.5f, -37.5f);
 
 
             for (int i = 0; i < objectsInfoList.Count; i++)
@@ -123,6 +123,34 @@ namespace com.eidu.counting.formation.tests
             List<ObjectInfo> objectsInfoList = FormationUtility.GetCircleFormationObjectsInformation(containerWidth, containerHeight, itemCount);
 
             TestHelper.OverLappingTest(objectsInfoList);
+        }
+
+        [Test]
+        public void TenItemContainingTest()
+        {
+            int containerWidth = 100;
+            int containerHeight = 100;
+            int itemCount = 10;
+
+            Rect containerBounds = new Rect(0, 0, containerWidth, containerHeight);
+
+            List<ObjectInfo> objectsInfoList = FormationUtility.GetCircleFormationObjectsInformation(containerWidth, containerHeight, itemCount);
+
+            TestHelper.CheckIfAllObjectsInsideContainer(containerBounds, objectsInfoList);
+        }
+
+        [Test]
+        public void HundredItemContainingTest()
+        {
+            int containerWidth = 100;
+            int containerHeight = 100;
+            int itemCount = 100;
+
+            Rect containerBounds = new Rect(0, 0, containerWidth, containerHeight);
+
+            List<ObjectInfo> objectsInfoList = FormationUtility.GetCircleFormationObjectsInformation(containerWidth, containerHeight, itemCount);
+
+            TestHelper.CheckIfAllObjectsInsideContainer(containerBounds, objectsInfoList);
         }
     }
 }
