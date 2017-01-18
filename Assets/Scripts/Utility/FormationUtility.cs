@@ -30,13 +30,17 @@ namespace com.eidu.util
 
             float size = Mathf.Min(itemDistance, containerHeight);
 
+            size = Mathf.Min(size, Constants.MAX_ITEM_SIZE);
+
+            float xBorderDistance = (containerWidth - numberOfItems * size) / 2; 
+
             for (int i = 0; i < numberOfItems; i++)
             {
-                float x = i * size;
+                float x = xBorderDistance + i * size;
                 ObjectInfo currentObjectInfo = new ObjectInfo();
                 currentObjectInfo.Position = new Vector2(x, -horizontalCenter + size / 2);
-                currentObjectInfo.Height = Mathf.Min(size, Constants.MAX_ITEM_SIZE);
-                currentObjectInfo.Width = Mathf.Min(size, Constants.MAX_ITEM_SIZE);
+                currentObjectInfo.Height = size;
+                currentObjectInfo.Width = size;
                 objectsInformationList.Add(currentObjectInfo);
             }
 
